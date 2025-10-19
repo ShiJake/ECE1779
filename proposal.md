@@ -27,11 +27,10 @@ Design and deploy a **stateful, cloud‑native web app** that:
 - Demonstrates modern cloud‑native operations (observability, CI/CD, security, backups).
 
 ### Core Functional Features
-- **User Authentication**: Sign‑up/login with hashed passwords; session or JWT‑based auth. Password reset flow (email link) is a stretch goal.
+- **User Authentication**: Secure user authentication will be implemented using Auth0 with JWT-based login and session management, supporting email/password sign-up and a password-reset flow as a stretch goal.
 - **Workout Logging**: Capture exercises, sets, reps, weight, notes, and date. Editing and deletion supported with audit timestamps.
 - **History & Charts**: Weekly volume (sets×reps×weight), per‑exercise trend lines, and simple PR/1‑RM estimates to visualize progress.
-- **Usability**: Fast input with sensible defaults, keyboard shortcuts on desktop, and responsive UI for mobile browsers.
-- **Accessibility**: WCAG‑aware color contrast, focus states, keyboard navigability, and alt text for charts.
+- **Usability**: Fast input with sensible defaults and keyboard shortcuts on desktop.
 
 ### Non‑Functional Requirements (NFRs)
 - **Availability**: Target 99.5% during the project window.
@@ -93,9 +92,9 @@ Our team of 4 members will split responsibilities as follows:
 - Integrate with PostgreSQL.
 
 **Luke Ren — Frontend Developer**
-- Build a simple web interface (React or HTML/CSS/JS).
+- Build a web interface in React.
 - Workout logging form and data visualization (charts).
-- User authentication UI.
+- User authentication.
 
 **Jake Shi — Deployment & Orchestration**
 - Containerize the app with Docker.
