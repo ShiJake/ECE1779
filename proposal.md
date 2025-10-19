@@ -87,7 +87,7 @@ Automated nightly PostgreSQL dumps to cloud object storage with retention for re
 Our team of 4 members will split responsibilities as follows:
 
 **Ellen Pan — Backend Developer**
-- Implement REST API (Node.js/Express or Python Flask).
+- Implement REST API using Node.js.
 - Define database schema (users, workouts, exercises).
 - Integrate with PostgreSQL.
 
