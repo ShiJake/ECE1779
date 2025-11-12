@@ -1,75 +1,70 @@
-# React + TypeScript + Vite
+# 🏋️‍♂️ FitLog Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A simple fitness logging web application built with **React + TypeScript + Vite + TailwindCSS**.  
+It allows users to log fitness activities, view their progress charts, and manage their data locally (or via API when backend is connected).
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🚀 Getting Started
 
-## React Compiler
+### 1. Install dependencies
+Make sure you have **Node.js ≥ 18** installed.
 
-The React Compiler is enabled on this template. See [this documentation](https://react.dev/learn/react-compiler) for more information.
-
-Note: This will impact Vite dev & build performances.
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm install
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+### 2. Run the development server
+```bash
+npm run dev
 ```
+Then open the printed local URL, usually:  
+👉 [http://localhost:5173](http://localhost:5173)
+
+---
+
+## 🧱 Project Structure
+```
+SweatSync/
+├── src/
+│   ├── pages/           # Login, Dashboard, Log pages
+│   ├── components/      # Reusable UI components
+│   ├── context/         # App-wide state (user, entries)
+│   ├── index.css        # Tailwind base styles
+│   ├── main.tsx         # App entry point
+│   └── App.tsx          # Router & page composition
+├── tailwind.config.js
+├── postcss.config.js
+├── tsconfig.json
+└── package.json
+```
+
+---
+
+## 🧩 Scripts
+| Command | Description |
+|----------|--------------|
+| `npm run dev` | Start local dev server |
+| `npm run build` | Build optimized production bundle |
+| `npm run preview` | Preview production build locally |
+
+---
+
+## ⚙️ Environment
+If you later connect a backend API, you can define your base URL in a `.env` file:
+```
+VITE_API_BASE_URL=https://api.yourserver.com
+```
+
+Access it in code via:
+```ts
+const baseUrl = import.meta.env.VITE_API_BASE_URL;
+```
+
+---
+
+## 🧠 Notes
+- Styling uses **TailwindCSS v4**.
+- Charts use **Recharts**.
+- Until backend integration, fitness entries are saved in **localStorage**.
+- See [`docs/api-spec.md`](./docs/api-spec.md) for API interface details.
