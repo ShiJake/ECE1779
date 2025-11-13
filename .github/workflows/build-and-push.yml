@@ -9,17 +9,16 @@ permissions:
   contents: read
   packages: write
 
-env:
-  OWNER_LC: ${{ toLower(github.repository_owner) }}
-  BACKEND_IMAGE: ghcr.io/${{ env.OWNER_LC }}/sweatsync-backend
-  FRONTEND_IMAGE: ghcr.io/${{ env.OWNER_LC }}/sweatsync-frontend
-
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      # Compute lowercase owner and export to env for later steps
+      - name: Lowercase owner
+        run: echo "OWNER_LC=${GITHUB_REPOSITORY_OWNER,,}" >> $GITHUB_ENV
 
       - name: Log in to GHCR
         uses: docker/login-action@v3
@@ -28,22 +27,20 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      # Build & push backend
       - name: Build & push backend (latest + commit SHA)
         uses: docker/build-push-action@v6
         with:
           context: ./backend
           push: true
           tags: |
-            ${{ env.BACKEND_IMAGE }}:latest
-            ${{ env.BACKEND_IMAGE }}:${{ github.sha }}
+            ghcr.io/${{ env.OWNER_LC }}/sweatsync-backend:latest
+            ghcr.io/${{ env.OWNER_LC }}/sweatsync-backend:${{ github.sha }}
 
-      # Build & push frontend
       - name: Build & push frontend (latest + commit SHA)
         uses: docker/build-push-action@v6
         with:
           context: ./frontend
           push: true
           tags: |
-            ${{ env.FRONTEND_IMAGE }}:latest
-            ${{ env.FRONTEND_IMAGE }}:${{ github.sha }}
+            ghcr.io/${{ env.OWNER_LC }}/sweatsync-frontend:latest
+            ghcr.io/${{ env.OWNER_LC }}/sweatsync-frontend:${{ github.sha }}
