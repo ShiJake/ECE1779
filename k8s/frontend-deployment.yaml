@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: ghcr.io/ShiJake/sweatsync-frontend:latest
+          image: ghcr.io/shijake/sweatsync-frontend:latest
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 80
