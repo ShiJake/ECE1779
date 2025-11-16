@@ -1,64 +1,109 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode, JSX } from "react";
-
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  ReactNode,
+  JSX,
+} from "react";
 
 export interface Entry {
-id: number;
-date: string;
-type: string;
-quantity: number;
+  id: number;
+  date: string;
+  type: string;
+  quantity: number;
 }
-
 
 export interface User {
-email: string;
+  id: number;
+  email: string;
 }
-
 
 interface AppContextType {
-user: User | null;
-setUser: (user: User | null) => void;
-entries: Entry[];
-addEntry: (entry: Omit<Entry, "id">) => void;
+  user: User | null;
+  setUser: (user: User | null) => void;
+  token: string | null;
+  setToken: (token: string | null) => void;
+  entries: Entry[];
+  setEntries: (entries: Entry[]) => void;
 }
-
 
 const AppStore = createContext<AppContextType | undefined>(undefined);
 
-
-function todayOffset(n: number): string {
-const d = new Date();
-d.setDate(d.getDate() + n);
-return new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().slice(0, 10);
-}
-
-
-const defaultEntries: Entry[] = [
-{ id: 1, date: todayOffset(-2), type: "Run (min)", quantity: 30 },
-{ id: 2, date: todayOffset(-1), type: "Push-ups (reps)", quantity: 50 },
-{ id: 3, date: todayOffset(-1), type: "Cycling (min)", quantity: 45 },
-{ id: 4, date: todayOffset(0), type: "Squats (reps)", quantity: 60 },
-];
-
-
 export function AppProvider({ children }: { children: ReactNode }): JSX.Element {
-const [user, setUser] = useState<User | null>(null);
-const [entries, setEntries] = useState<Entry[]>(() => JSON.parse(localStorage.getItem("fitness.entries") || "null") || defaultEntries);
+  const [user, setUser] = useState<User | null>(null);
+  const [token, setToken] = useState<string | null>(() =>
+    localStorage.getItem("token")
+  );
+  const [entries, setEntries] = useState<Entry[]>([]);
 
+  // Restore session on refresh
+  useEffect(() => {
+    async function init() {
+      if (!token) return; // no token => stay logged out
 
-useEffect(() => {
-localStorage.setItem("fitness.entries", JSON.stringify(entries));
-}, [entries]);
+      try {
+        const meRes = await fetch("http://localhost:8000/api/me", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
 
+        // If token invalid or expired
+        if (meRes.status === 401) {
+          console.warn("Invalid token, clearing session");
+          setUser(null);
+          setEntries([]);
+          localStorage.removeItem("token");
+          setToken(null);
+          return;
+        }
 
-const addEntry = (entry: Omit<Entry, "id">) => setEntries((prev) => [...prev, { id: Date.now(), ...entry }]);
+        const me = await meRes.json();
+        setUser(me);
 
+        const entRes = await fetch("http://localhost:8000/api/entries", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
 
-return <AppStore.Provider value={{ user, setUser, entries, addEntry }}>{children}</AppStore.Provider>;
+        if (entRes.status === 401) {
+          setEntries([]);
+          return;
+        }
+
+        const entriesJson = await entRes.json();
+
+        if (Array.isArray(entriesJson)) {
+          setEntries(entriesJson);
+        } else {
+          console.warn("Entries response is not an array:", entriesJson);
+          setEntries([]);
+        }
+
+      } catch (err) {
+        console.error("Session restore failed", err);
+        setToken(null);
+        setUser(null);
+        setEntries([]);
+        localStorage.removeItem("token");
+      }
+    }
+
+    init();
+  }, [token]);
+
+  const value: AppContextType = {
+    user,
+    setUser,
+    token,
+    setToken,
+    entries,
+    setEntries,
+  };
+
+  return <AppStore.Provider value={value}>{children}</AppStore.Provider>;
 }
-
 
 export const useApp = (): AppContextType => {
-const ctx = useContext(AppStore);
-if (!ctx) throw new Error("useApp must be used within AppProvider");
-return ctx;
+  const ctx = useContext(AppStore);
+  if (!ctx) throw new Error("useApp must be used within AppProvider");
+  return ctx;
 };
