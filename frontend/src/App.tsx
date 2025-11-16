@@ -6,6 +6,7 @@ import PrivateRoute from "./components/PrivateRoute";
 import LoginPage from "./pages/LoginPage";
 import DashboardPage from "./pages/DashboardPage";
 import LogPage from "./pages/LogPage";
+import SignupPage from "./pages/SignupPage"; 
 
 
 export default function App(): JSX.Element {
@@ -18,6 +19,7 @@ return (
 <Route path="/" element={<PrivateRoute><DashboardPage /></PrivateRoute>} />
 <Route path="/log" element={<PrivateRoute><LogPage /></PrivateRoute>} />
 <Route path="*" element={<Navigate to="/" replace />} />
+<Route path="/signup" element={<SignupPage />} />
 </Routes>
 </Shell>
 </AppProvider>
