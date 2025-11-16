@@ -9,7 +9,7 @@ export default function SignupPage(): JSX.Element {
   const [confirmPassword, setConfirmPassword] = useState("");
   const navigate = useNavigate();
 
-  const onSubmit = (e: React.FormEvent) => {
+  const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!email || !password || !confirmPassword) {
@@ -22,9 +22,27 @@ export default function SignupPage(): JSX.Element {
       return;
     }
 
-    // In the future, call backend signup API here.
+    try {
+      const res = await fetch("http://localhost:8000/api/auth/signup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
 
-    navigate("/");
+      const data = await res.json();
+
+      if (!res.ok) {
+        alert(data.error || "Signup failed");
+        return;
+      }
+
+      alert("Account created successfully! Please log in.");
+      navigate("/login");
+
+    } catch (err) {
+      console.error(err);
+      alert("Signup failed, check the console.");
+    }
   };
 
   if (user) return <Navigate to="/" replace />;
