@@ -23,8 +23,7 @@ export default function SignupPage(): JSX.Element {
     }
 
     // In the future, call backend signup API here.
-    // For now we just “create” the user and log them in.
-    setUser({ email });
+
     navigate("/");
   };
 
