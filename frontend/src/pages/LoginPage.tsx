@@ -10,27 +10,31 @@ export default function LoginPage(): JSX.Element {
   const navigate = useNavigate();
 
   const onSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    try {
+  try {
       const res = await fetch("http://localhost:8000/api/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password }),   // ✅ NOW sending both
       });
 
       const data = await res.json();
+
+      if (!res.ok) {
+      alert(data.error || "Invalid email or password");
+      return;
+      }
 
       localStorage.setItem("token", data.token);
       setToken(data.token);
       setUser(data.user);
 
       navigate("/");
-    } catch (err) {
+  } catch (err) {
       console.error(err);
       alert("Login failed");
-    }
-
+  }
   };
 
   if (user) return <Navigate to="/" replace />;
