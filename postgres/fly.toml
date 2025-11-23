@@ -1,0 +1,26 @@
+app = "sweatsync-db"
+primary_region = "yyz"
+kill_signal = "SIGINT"
+kill_timeout = "5s"
+
+[vm]
+  cpu_kind = "shared"
+  cpus = 1
+  memory = "1024mb"   
+
+[[mounts]]
+  source = "pg_data"
+  destination = "/var/lib/postgresql/data"
+
+[env]
+  PGDATA = "/var/lib/postgresql/data/pgdata"
+
+# Internal-only TCP (no public exposure)
+[[services]]
+  protocol = "tcp"
+  internal_port = 5432
+
+  [[services.tcp_checks]]
+    interval = "10s"
+    timeout  = "3s"
+    grace_period = "60s"
