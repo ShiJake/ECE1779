@@ -9,7 +9,15 @@ import bcrypt from "bcrypt";
 dotenv.config();
 
 const app = express();
-app.use(cors());
+app.use(
+  cors({
+    origin: [
+      "https://sweatsync-frontend.fly.dev",
+      "http://localhost:3000", // for local dev
+    ],
+    credentials: false,
+  })
+);
 app.use(express.json());
 
 const pool = new pg.Pool({

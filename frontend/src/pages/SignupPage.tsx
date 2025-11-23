@@ -9,6 +9,8 @@ export default function SignupPage(): JSX.Element {
   const [confirmPassword, setConfirmPassword] = useState("");
   const navigate = useNavigate();
 
+  const API_BASE = import.meta.env.VITE_API_BASE || window.location.origin; // fallback for local
+
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -23,7 +25,7 @@ export default function SignupPage(): JSX.Element {
     }
 
     try {
-      const res = await fetch("http://localhost:8000/api/auth/signup", {
+      const res = await fetch(`${API_BASE}/api/auth/signup`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
