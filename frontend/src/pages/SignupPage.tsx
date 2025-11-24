@@ -10,6 +10,7 @@ export default function SignupPage(): JSX.Element {
   const navigate = useNavigate();
 
   const API_BASE = import.meta.env.VITE_API_BASE || window.location.origin; // fallback for local
+  console.log("VITE_API_BASE =", import.meta.env.VITE_API_BASE);
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
