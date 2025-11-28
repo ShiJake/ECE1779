@@ -2,7 +2,7 @@
 ECE1779 Course Project
 
 
-# SweatSync — Runbook
+# SweatSync — How to Install
 1) Local development (Docker Compose)
 ```
 docker compose up --build
@@ -50,3 +50,11 @@ minikube -n sweatsync service frontend --url
 
 
 Open the printed URL in your browser.
+
+# SweatSync — Runbook
+1) Get existing users info
+```
+docker exec -it sweatsync-db psql -U user -d sweatsync
+sweatsync=# \dt
+sweatsync=# SELECT * FROM users;
+```
