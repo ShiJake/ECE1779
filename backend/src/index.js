@@ -16,6 +16,32 @@ const pool = new pg.Pool({
   connectionString: process.env.DATABASE_URL,
 });
 
+async function ensureSchema() {
+  // users table
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS users (
+      id SERIAL PRIMARY KEY,
+      email TEXT UNIQUE NOT NULL,
+      password_hash TEXT NOT NULL,
+      created_at TIMESTAMPTZ DEFAULT NOW()
+    );
+  `);
+
+  // entries table
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS entries (
+      id SERIAL PRIMARY KEY,
+      user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+      date DATE NOT NULL,
+      type TEXT NOT NULL,
+      quantity INTEGER NOT NULL,
+      created_at TIMESTAMPTZ DEFAULT NOW()
+    );
+  `);
+
+  console.log("DB schema ensured (users, entries)");
+}
+
 const JWT_SECRET = process.env.JWT_SECRET || crypto.randomUUID();
 console.log("Using JWT secret:", JWT_SECRET);
 
@@ -165,4 +191,16 @@ app.get("/ready", async (_req, res) => {
 });
 
 const PORT = process.env.PORT || 8000;
-app.listen(PORT, () => console.log(`Backend running on :${PORT}`));
+
+(async () => {
+  try {
+    await ensureSchema();
+    app.listen(PORT, () => {
+      console.log(`Backend running on :${PORT}`);
+    });
+  } catch (err) {
+    console.error("Failed to initialize DB schema:", err);
+    process.exit(1);
+  }
+})();
+
