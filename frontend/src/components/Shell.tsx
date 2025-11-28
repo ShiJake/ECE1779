@@ -22,7 +22,7 @@ export default function Shell({ children }: { children: ReactNode }): JSX.Elemen
         <div className="mx-auto max-w-6xl px-4 py-3 flex justify-between items-center">
           <div className="flex items-center gap-2">
             <div className="h-6 w-6 rounded bg-indigo-600" />
-            <Link to="/" className="font-semibold">FitLog</Link>
+            <Link to="/" className="font-semibold">SweatSync</Link>
           </div>
 
           <nav className="flex gap-3 text-sm">
