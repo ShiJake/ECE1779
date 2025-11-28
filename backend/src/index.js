@@ -163,5 +163,14 @@ app.post("/api/entries", auth, async (req, res) => {
 
 app.get("/health", (_req, res) => res.json({ status: "ok" }));
 
+app.get("/ready", async (_req, res) => {
+  try {
+    await pool.query("SELECT 1");
+    res.json({ status: "ready" });
+  } catch (e) {
+    res.status(503).json({ status: "db_not_ready", error: e.message });
+  }
+});
+
 const PORT = process.env.PORT || 8000;
 app.listen(PORT, () => console.log(`Backend running on :${PORT}`));
