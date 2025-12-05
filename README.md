@@ -27,6 +27,8 @@ kubectl -n sweatsync apply -f k8s/postgres-pvc.yaml
 kubectl -n sweatsync apply -f k8s/postgres-deployment.yaml
 kubectl -n sweatsync apply -f k8s/backend-deployment.yaml -f k8s/service-backend.yaml
 kubectl -n sweatsync apply -f k8s/frontend-deployment.yaml -f k8s/service-frontend.yaml
+kubectl -n sweatsync apply -f k8s/weekly-email-cron.yaml
+kubectl -n sweatsync apply -f k8s/sendgrid-secret.yaml 
 ```
 
 4) Point Deployments to GHCR images
@@ -41,6 +43,7 @@ kubectl -n sweatsync rollout status deploy/postgres
 kubectl -n sweatsync rollout status deploy/backend
 kubectl -n sweatsync rollout status deploy/frontend
 kubectl -n sweatsync get pods -o wide
+kubectl -n sweatsync get cronjobs
 ```
 
 6) Open the app (Minikube Service URL)

@@ -4,7 +4,7 @@ metadata:
   name: sweatsync-weekly-email
   namespace: sweatsync
 spec:
-  schedule: "0 21 * * 0" # Sunday 21:00 (cluster timezone)
+  schedule:   "*/1 * * * *" # every 1 minute for testing
   jobTemplate:
     spec:
       backoffLimit: 1
