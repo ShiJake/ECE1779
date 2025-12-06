@@ -1,8 +1,7 @@
+import { Pool } from "pg";
+import sgMail from "@sendgrid/mail";
 
-const pg = require("pg");
-const sgMail = require("@sendgrid/mail");
-
-const pool = new pg.Pool({
+const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
 });
 
@@ -22,7 +21,6 @@ async function main() {
 
   const weekStartLabel = formatDate(startDate);
   const weekEndLabel = formatDate(endDate);
-
 
   const { rows: users } = await pool.query(`
     SELECT id, email
@@ -47,7 +45,9 @@ async function main() {
     `
   );
 
-  console.log(`Found ${weeklyEntries.length} aggregated workout rows for this week.`);
+  console.log(
+    `Found ${weeklyEntries.length} aggregated workout rows for this week.`
+  );
 
   const summaries = new Map();
 
