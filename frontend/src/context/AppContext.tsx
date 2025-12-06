@@ -43,7 +43,7 @@ export function AppProvider({ children }: { children: ReactNode }): JSX.Element 
       if (!token) return; // no token => stay logged out
 
       try {
-        const meRes = await fetch("http://localhost:8000/api/me", {
+        const meRes = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/me`, {
           headers: { Authorization: `Bearer ${token}` },
         });
 
@@ -60,7 +60,7 @@ export function AppProvider({ children }: { children: ReactNode }): JSX.Element 
         const me = await meRes.json();
         setUser(me);
 
-        const entRes = await fetch("http://localhost:8000/api/entries", {
+        const entRes = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/entries`, {
           headers: { Authorization: `Bearer ${token}` },
         });
 

@@ -27,7 +27,7 @@ export default function LogPage(): JSX.Element {
     }
 
     try {
-      await fetch("http://localhost:8000/api/entries", {
+      await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/entries`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -36,7 +36,7 @@ export default function LogPage(): JSX.Element {
         body: JSON.stringify({ date, type, quantity: q }),
       });
 
-      const data = await fetch("http://localhost:8000/api/entries", {
+      const data = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/entries`, {
         headers: { Authorization: `Bearer ${token}` },
       }).then((r) => r.json());
 
