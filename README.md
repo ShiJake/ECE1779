@@ -256,16 +256,18 @@ The current schema contains two tables:
 - `entries`: `id` (serial primary key), `user_id` (foreign key → users.id, cascade on delete), `date` (date of the workout), `type` (text description of exercise), `quantity` (numeric value associated with the activity), `created_at` (timestamp)
 
 Example row from users:
+```
  id |        email         |                        password_hash                         |          created_at
 ----+----------------------+--------------------------------------------------------------+-------------------------------
   1 | ellen2@test.com      | $2b$10$ZQptpNAPhk//sXMqq8NeXOzVfSkWZ58jkhp2Lvu1sf/MkU2MlbWKe | 2025-12-05 00:29:28.340012+00
 
-
+```
 Example row from entries:
+```
  id | user_id |    date    |      type       | quantity |          created_at
 ----+---------+------------+-----------------+----------+-------------------------------
   1 |       4 | 2025-12-06 | Run (min)       |       22 | 2025-12-06 19:31:04.290425+00
-
+```
 #### Accessing the Fly.io Production Database
 
 ```bash
