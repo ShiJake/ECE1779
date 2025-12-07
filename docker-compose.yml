@@ -16,7 +16,7 @@ services:
     build: ./frontend
     container_name: sweatsync-frontend
     ports:
-      - "3000:80"
+      - "3000:8080"
     depends_on:
       - backend
 
