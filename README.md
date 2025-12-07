@@ -124,7 +124,7 @@ SweatSync offers a set of core and advanced features designed to meet the projec
 
 **Sign Up**
 
-- Open the landing page and create an account with email, and password.
+- Open the [landing page](https://sweatsync-frontend.fly.dev/) and create an account with email, and password.
 - Passwords are stored securely with hashing and validated server-side.
 
 **Log In**
