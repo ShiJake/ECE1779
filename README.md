@@ -196,18 +196,34 @@ kubectl -n sweatsync apply -f k8s/postgres-deployment.yaml
 
 kubectl -n sweatsync apply -f k8s/backend-deployment.yaml -f k8s/service-backend.yaml
 kubectl -n sweatsync apply -f k8s/frontend-deployment.yaml -f k8s/service-frontend.yaml
-
-kubectl -n sweatsync apply -f k8s/weekly-email-cron.yaml
-kubectl -n sweatsync apply -f k8s/sendgrid-secret.yaml
 ```
 
-These manifests create the namespace, configuration, secrets, database PVC and Deployment, backend and frontend Deployments and Services, the weekly email CronJob, and the SendGrid secret.
+These manifests create the namespace, configuration, secrets, database PVC and Deployment, backend and frontend Deployments and Services.
 
-**Set Container Images from GHCR**
+**Create the SendGrid secret out-of-band (do NOT commit to Git)**
+Set your key in the environment for this command only
+
+The SendGrid Key is stored in GitHub Repo Secret
+
+PowerShell:
+```bash
+$env:SENDGRID_API_KEY="<your-sendgrid-key>"
+
+kubectl -n sweatsync create secret generic sendgrid-secret `
+  --from-literal=SENDGRID_API_KEY="$env:SENDGRID_API_KEY" `
+  --dry-run=client -o yaml | kubectl apply -f -
+```
+
+**Apply the CronJob**
+kubectl -n sweatsync apply -f k8s/weekly-email-cron.yaml
+
+**Point Deployments to GHCR images (CI-built)**
 
 ```bash
-kubectl -n sweatsync set image deploy/backend backend=ghcr.io/shijake/sweatsync-backend:latest
+kubectl -n sweatsync set image deploy/backend  backend=ghcr.io/shijake/sweatsync-backend:latest
 kubectl -n sweatsync set image deploy/frontend frontend=ghcr.io/shijake/sweatsync-frontend:latest
+kubectl -n sweatsync rollout restart deploy/backend
+kubectl -n sweatsync rollout restart deploy/frontend
 ```
 
 **Check Rollouts and Pod Status**

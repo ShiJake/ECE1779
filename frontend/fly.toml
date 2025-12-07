@@ -7,6 +7,7 @@ app = 'sweatsync-frontend'
 primary_region = 'yyz'
 
 [build]
+  dockerfile = "Dockerfile"
   builtin = "node"
   install_dev_dependencies = true
   build_context = "."
