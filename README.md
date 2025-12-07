@@ -215,7 +215,9 @@ kubectl -n sweatsync create secret generic sendgrid-secret `
 ```
 
 **Apply the CronJob**
+```bash
 kubectl -n sweatsync apply -f k8s/weekly-email-cron.yaml
+```
 
 **Point Deployments to GHCR images (CI-built)**
 
