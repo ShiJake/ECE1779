@@ -32,7 +32,7 @@ The project team consists of four members, each with a unique role spanning back
 - **Jiakai Tang** (1002689487) – [jiakai.tang@mail.utoronto.ca](mailto:jiakai.tang@mail.utoronto.ca)
 - **Jake Shi** (1007861431) – [jake.shi@mail.utoronto.ca](mailto:jake.shi@mail.utoronto.ca)
 - **Ruoming (Luke) Ren** (1005889013) – [luke.ren@mail.utoronto.ca](mailto:luke.ren@mail.utoronto.ca)
-- **Ellen Pan** (1002159353) – [ellen.pan@mail.utoronto.ca](mailto:ellen.pan@mail.utoronto.ca)
+- **Ellen Pan** (1002159353) – [yunru.pan@mail.utoronto.ca](mailto:yunru.pan@mail.utoronto.ca)
 
 ***
 
@@ -48,11 +48,11 @@ From a learning perspective, the project delivers hands-on experience with a ful
 
 The primary objective of SweatSync is to design and deploy a fully cloud-native workout tracking system that demonstrates how modern applications can remain **stateful, scalable, and resilient** in real-world environments. From a user perspective, the project aims to provide a simple, reliable platform where individuals can log workouts, review past activity, and visualize long-term progress without the complexity or constraints of commercial fitness apps.
 
-From a systems engineering perspective, the project seeks to apply the full lifecycle of a cloud-native architecture:  
-- **Containerization** for reproducible development environments,  
-- **Kubernetes orchestration** for service management and horizontal scalability,  
-- **Persistent storage** to maintain per-user data across deployments,  
-- **Continuous integration and deployment** to ensure consistent delivery, and  
+From a systems engineering perspective, the project seeks to apply the full lifecycle of a cloud-native architecture:
+- **Containerization** for reproducible development environments,
+- **Kubernetes orchestration** for service management and horizontal scalability,
+- **Persistent storage** to maintain per-user data across deployments,
+- **Continuous integration and deployment** to ensure consistent delivery, and
 - **Observability** to monitor system health and behavior in production.
 
 Additionally, the project aims to explore **event-driven extensions** to a traditional web app—such as scheduled recap and reminder emails—by integrating serverless-style CronJobs with third-party services like SendGrid.
@@ -86,37 +86,37 @@ SweatSync offers a set of core and advanced features designed to meet the projec
 
 ### Core Technical functionalities
 
-- **Containerization & Local Development**  
+- **Containerization & Local Development**
   Dockerized backend and PostgreSQL database with a reproducible multi-container setup using Docker Compose.
 
-- **Stateful PostgreSQL Storage**  
+- **Stateful PostgreSQL Storage**
   PostgreSQL backed by Kubernetes PersistentVolumes/PVCs to ensure durable, crash-safe data storage across restarts and deployments.
 
-- **Deployment Provider (Fly.io)**  
+- **Deployment Provider (Fly.io)**
   Full application deployment on Fly.io, including runtime environment, networking, logging, metrics, and block-storage volumes.
 
-- **Kubernetes Orchestration**  
+- **Kubernetes Orchestration**
   Kubernetes Deployments, Services, ConfigMaps, Secrets, PVCs, and liveness/readiness probes manage scaling, configuration, and application health (Minikube locally, Fly.io in production).
 
-- **Monitoring & Logs**  
+- **Monitoring & Logs**
   Integrated Fly.io metrics and logs for CPU, memory, and request tracing, enabling observability and basic alerting.
 
-- **Frontend (Optional but Implemented)**  
+- **Frontend (Optional but Implemented)**
   React.js SPA for sign-in/up, workout logging, and analytics charts, responsive on desktop and mobile.
 
 ---
 ### Advanced Features
 
-- **Serverless Scheduled Emails (K8s CronJob + SendGrid)**  
+- **Serverless Scheduled Emails (K8s CronJob + SendGrid)**
   Automated weekly workout-recap and reminder emails using Kubernetes CronJobs and SendGrid integration.
 
-- **Security Enhancements**  
+- **Security Enhancements**
   Secure authentication (hashed passwords + tokens), HTTPS via Fly.io, and secrets managed through Kubernetes Secrets.
 
-- **CI/CD Pipeline (GitHub Actions)**  
+- **CI/CD Pipeline (GitHub Actions)**
   Automated build, test, containerization, and deployment workflows triggered on merges to `main`.
 
-- **External Service Integrations**  
+- **External Service Integrations**
   Email delivery via SendGrid with extensibility for additional third-party service integrations.
 
 
