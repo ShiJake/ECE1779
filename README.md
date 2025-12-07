@@ -282,8 +282,6 @@ postgres=# SELECT * FROM users;
 postgres=# SELECT * FROM entries;
 ```
 
-PVC-backed storage in Kubernetes ensures data durability across redeployments and rolling updates.
-
 ### CI/CD and Testing
 
 GitHub Actions pipelines run builds and tests on pushes and pull requests, then build and push Docker images to GHCR when changes are merged to main. This guarantees a consistent container image for Fly.io deployment and reduces manual deployment errors.
