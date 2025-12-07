@@ -4,7 +4,7 @@ metadata:
   name: sweatsync-weekly-email
   namespace: sweatsync
 spec:
-  schedule:   "*/1 * * * *" # every 1 minute for testing
+  schedule: "0 21 * * 0" # Sunday 21:00 (cluster timezone)
   jobTemplate:
     spec:
       backoffLimit: 1
@@ -24,7 +24,6 @@ spec:
                       name: db-secret         
                       key: DATABASE_URL
 
-                # SendGrid API key (you need to create this secret)
                 - name: SENDGRID_API_KEY
                   valueFrom:
                     secretKeyRef:
