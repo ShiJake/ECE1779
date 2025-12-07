@@ -273,6 +273,9 @@ GitHub Actions pipelines run builds and tests on pushes and pull requests, then 
 SweatSync is designed to run on Fly.io using either a Fly-managed Kubernetes setup or Fly’s app model with attached volumes. The environment hosts frontend, backend, and PostgreSQL with block storage volumes for persistent data.
 
 - **Production Host**: Fly.io.
+  - ***sweatsync-backend***: Node.js API service
+  - ***sweatsync-frontend***: React frontend
+  - ***sweatsync-db-pg***: Unmanaged Postgres instance running on Fly Machines with an attached volume for persistence
 - **Live URL**: https://sweatsync-frontend.fly.dev/
 - **Monitoring**: https://sweatsync-backend.fly.dev/health
 
@@ -285,7 +288,7 @@ SendGrid-based weekly emails are executed as scheduled tasks (e.g., CronJobs) in
 Roles and contributions align with the project proposal but have been refined to match actual implementation and git history.
 
 - **Ellen Pan – Backend Developer**
-Implemented the Node.js REST API, designed and created the PostgreSQL database schema, integrated database access, and built authentication and workout CRUD endpoints.
+Implemented the Node.js REST API and designed the PostgreSQL schema supporting users, workouts, and exercises. Built secure authentication and all workout-related CRUD endpoints to ensure consistent and reliable data handling. Contributed to backend testing, debugging, and overall service stability throughout development.
 - **Ruoming (Luke) Ren – Frontend Developer \& SendGrid Email**
 Developed the React-based user interface—including authentication flows, workout logging forms, and analytics dashboards—and implemented the serverless email functionality by creating a Kubernetes CronJob that triggers weekly recap emails. Integrated custom SendGrid email templates into the backend email service to deliver personalized, data-driven summaries to users.
 - **Jake Shi – Deployment, Orchestration, CI/CD \& Fly.io**
