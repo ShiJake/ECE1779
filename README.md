@@ -31,7 +31,7 @@ The project team consists of four members, each with a unique role spanning back
 
 - **Jiakai Tang** (1002689487) – [jiakai.tang@mail.utoronto.ca](mailto:jiakai.tang@mail.utoronto.ca)
 - **Jake Shi** (1007861431) – [jake.shi@mail.utoronto.ca](mailto:jake.shi@mail.utoronto.ca)
-- **Ruoming (Luke) Ren** (1005889013) – [ruoming.ren@mail.utoronto.ca](mailto:ruoming.ren@mail.utoronto.ca)
+- **Ruoming (Luke) Ren** (1005889013) – [luke.ren@mail.utoronto.ca](mailto:luke.ren@mail.utoronto.ca)
 - **Ellen Pan** (1002159353) – [ellen.pan@mail.utoronto.ca](mailto:ellen.pan@mail.utoronto.ca)
 
 ***
@@ -46,9 +46,19 @@ From a learning perspective, the project delivers hands-on experience with a ful
 
 ## Objectives
 
-SweatSync’s primary objective is to deliver a stateful, cloud-native workout tracking app that supports secure user accounts, individualized workout logs, and long-term progress visualization. The system aims to persist data reliably in PostgreSQL with durable volumes and clear backup/restore processes, while demonstrating observability, CI/CD, and good security practices.
+The primary objective of SweatSync is to design and deploy a fully cloud-native workout tracking system that demonstrates how modern applications can remain **stateful, scalable, and resilient** in real-world environments. From a user perspective, the project aims to provide a simple, reliable platform where individuals can log workouts, review past activity, and visualize long-term progress without the complexity or constraints of commercial fitness apps.
 
-Non-functional goals include a target uptime of 99.5% during the project window, p95 API latency under 300 ms for common operations at low concurrency, HTTPS-only traffic, and horizontal scalability via multiple application replicas. These objectives align with both user expectations and the project requirements.
+From a systems engineering perspective, the project seeks to apply the full lifecycle of a cloud-native architecture:  
+- **Containerization** for reproducible development environments,  
+- **Kubernetes orchestration** for service management and horizontal scalability,  
+- **Persistent storage** to maintain per-user data across deployments,  
+- **Continuous integration and deployment** to ensure consistent delivery, and  
+- **Observability** to monitor system health and behavior in production.
+
+Additionally, the project aims to explore **event-driven extensions** to a traditional web app—such as scheduled recap and reminder emails—by integrating serverless-style CronJobs with third-party services like SendGrid.
+
+Overall, the objective is to build an application that not only solves a meaningful user problem but also showcases strong engineering practices across deployment, scalability, reliability, and maintainability in a modern cloud environment.
+
 
 ***
 
@@ -59,12 +69,12 @@ The project adopts a Kubernetes (K8s)–based orchestration approach rather than
 
 | Layer | Technology \& Rationale |
 | :-- | :-- |
-| Frontend | React.js SPA for authentication, workout logging, and charts, responsive on web/mobile. |
-| Backend | Node.js REST API for auth, workout CRUD, and analytics endpoints. |
+| Frontend | React.js SPA for authentication, workout logging, and charts, responsive on web. |
+| Backend | Node.js REST API for authentication, workout CRUD, and analytics endpoints. |
 | Database | PostgreSQL with indices and foreign keys, backed by PersistentVolumes/PVCs in K8s. |
 | Orchestration | Kubernetes (Minikube locally, Fly.io in production) with Deployments, Services, ConfigMaps, Secrets, and health probes. |
 | Hosting | Fly.io for execution environment, networking, logging, metrics, and block storage volumes. |
-| Email | SendGrid for weekly recap/reminder emails via a scheduled Fly.io function. |
+| Email | SendGrid for weekly recap emails via a scheduled Kubernetes CronJob. |
 | CI/CD | GitHub Actions for build, test, containerization, and deploy on merges to main. |
 
 
@@ -74,61 +84,66 @@ The project adopts a Kubernetes (K8s)–based orchestration approach rather than
 
 SweatSync offers a set of core and advanced features designed to meet the project’s functional and non-functional objectives.
 
-- **User Authentication**
-Secure sign-up and login with hashed passwords and token-based sessions, isolating per-user workout history.
-- **Workout Logging**
-Logging of workouts with exercises that include name, sets, reps, weight, notes, and date, with full CRUD support and timestamps.
-- **History \& Charts**
-History views showing recent workouts and charts of weekly volume (sets × reps × weight), per-exercise trends, and simple PR/1RM-style indicators.
-- **Usability \& Accessibility**
-Fast input flows with sensible defaults, keyboard-friendly interactions, responsive layout for mobile, and WCAG-aware styling.
-- **Weekly/Reminder Emails (SendGrid + Fly Function)**
-Scheduled Fly.io functions query users who have not logged workouts for seven days and send reminder or summary emails via SendGrid.
-- **Database Backup \& Recovery**
-Automated nightly PostgreSQL dumps to cloud storage (e.g., via Fly volumes) with retention policies for disaster recovery.
-- **Observability \& Alerts**
-Metrics for CPU, memory, disk, request rate, errors, and latency percentiles; structured JSON logs; alerts for high error rates, latency, or pod restart storms.
-- **Security \& Scalability**
-HTTPS-only traffic, secrets managed via Kubernetes Secrets, least-privilege DB roles, and horizontal scaling of application replicas.
+### Core Technical functionalities
 
-***
+- **Containerization & Local Development**  
+  Dockerized backend and PostgreSQL database with a reproducible multi-container setup using Docker Compose.
 
-## User Guide
+- **Stateful PostgreSQL Storage**  
+  PostgreSQL backed by Kubernetes PersistentVolumes/PVCs to ensure durable, crash-safe data storage across restarts and deployments.
 
-This section describes how an end user interacts with SweatSync and uses its main features.
+- **Deployment Provider (Fly.io)**  
+  Full application deployment on Fly.io, including runtime environment, networking, logging, metrics, and block-storage volumes.
 
-### Accessing the Application
+- **Kubernetes Orchestration**  
+  Kubernetes Deployments, Services, ConfigMaps, Secrets, PVCs, and liveness/readiness probes manage scaling, configuration, and application health (Minikube locally, Fly.io in production).
 
-- **Production URL (if deployed)**: `https://<your-fly-app>.fly.dev` (replace with the actual Fly.io URL in the repo).
-- The app runs in any modern browser and is optimized for both desktop and mobile screens.
+- **Monitoring & Logs**  
+  Integrated Fly.io metrics and logs for CPU, memory, and request tracing, enabling observability and basic alerting.
+
+- **Frontend (Optional but Implemented)**  
+  React.js SPA for sign-in/up, workout logging, and analytics charts, responsive on desktop and mobile.
+
+---
+### Advanced Features
+
+- **Serverless Scheduled Emails (K8s CronJob + SendGrid)**  
+  Automated weekly workout-recap and reminder emails using Kubernetes CronJobs and SendGrid integration.
+
+- **Security Enhancements**  
+  Secure authentication (hashed passwords + tokens), HTTPS via Fly.io, and secrets managed through Kubernetes Secrets.
+
+- **CI/CD Pipeline (GitHub Actions)**  
+  Automated build, test, containerization, and deployment workflows triggered on merges to `main`.
+
+- **External Service Integrations**  
+  Email delivery via SendGrid with extensibility for additional third-party service integrations.
 
 
-### Using the Main Features
+### User Guide
 
 **Sign Up**
 
-- Open the landing page and create an account with username, email, and password.
+- Open the landing page and create an account with email, and password.
 - Passwords are stored securely with hashing and validated server-side.
 
 **Log In**
 
-- Log in with your email/username and password to start a new authenticated session.
+- Log in with your email and password to start a new authenticated session.
 - A session or JWT-based mechanism keeps you logged in during normal browsing.
 
 **Log a Workout**
 
-- Click “New Workout” to create a workout entry for a chosen date.
-- Add one or more exercises specifying name, sets, reps, weight, and optional notes, then save to persist.
+- Click “Add Entry” to create a workout entry for a chosen date.
+- Add one or more exercises specifying activity type, quantity, and dates, then save to persist.
 
 **View History \& Charts**
 
-- Navigate to the history/dashboard to view recent workouts, filter by date or exercise, and inspect charts showing training volume and trends.
+- Navigate to the dashboard to view recent workouts, filter by date or exercise, and inspect charts showing training volume and trends.
 
 **Email Recaps/Reminders**
 
-- Periodically, users receive recap or reminder emails generated by the SendGrid integration if they have been inactive for a configured period.
-
-Screenshots for login, workout logging, and dashboard pages should be stored in the repository (e.g., in `docs/` or `assets/`) so they render correctly on GitHub.
+- Periodically, users receive recap emails generated by the SendGrid integration every Sunday night at 9pm.
 
 ***
 
@@ -203,7 +218,6 @@ kubectl -n sweatsync rollout status deploy/backend
 kubectl -n sweatsync rollout status deploy/frontend
 
 kubectl -n sweatsync get pods -o wide
-kubectl -n sweatsync get cronjobs
 ```
 
 **Access the App via Minikube**
@@ -242,11 +256,11 @@ GitHub Actions pipelines run builds and tests on pushes and pull requests, then 
 
 SweatSync is designed to run on Fly.io using either a Fly-managed Kubernetes setup or Fly’s app model with attached volumes. The environment hosts frontend, backend, and PostgreSQL with block storage volumes for persistent data.
 
-- **Production Host**: Fly.io (execution environment, networking, logs, metrics, and volumes).
-- **Live URL**: Replace the placeholder `https://<your-fly-app>.fly.dev` with the actual Fly.io URL for the deployed app in the repository README.
-- **Monitoring**: Fly metrics and logs plus application `/health` endpoints used as liveness and readiness probes.
+- **Production Host**: Fly.io.
+- **Live URL**: https://sweatsync-frontend.fly.dev/
+- **Monitoring**: https://sweatsync-backend.fly.dev/health
 
-Nightly database backups and SendGrid-based weekly emails are executed as scheduled tasks (e.g., CronJobs) in the cluster.
+SendGrid-based weekly emails are executed as scheduled tasks (e.g., CronJobs) in the cluster.
 
 ***
 
@@ -257,7 +271,7 @@ Roles and contributions align with the project proposal but have been refined to
 - **Ellen Pan – Backend Developer**
 Implemented the Node.js REST API, designed and created the PostgreSQL database schema, integrated database access, and built authentication and workout CRUD endpoints.
 - **Ruoming (Luke) Ren – Frontend Developer \& SendGrid Email**
-Developed the React-based UI, including authentication pages, workout logging forms, and analytics charts, with an emphasis on responsive design and accessibility, and contributed to integrating SendGrid-powered recap/reminder email templates into the overall user experience.
+Developed the React-based user interface—including authentication flows, workout logging forms, and analytics dashboards—and implemented the serverless email functionality by creating a Kubernetes CronJob that triggers weekly recap emails. Integrated custom SendGrid email templates into the backend email service to deliver personalized, data-driven summaries to users.
 - **Jake Shi – Deployment, Orchestration, CI/CD \& Fly.io**
 Containerized the application with Docker, built and maintained Docker Compose for local development, authored Kubernetes manifests (Deployments, Services, PVCs, namespace), and set up Minikube and Fly.io deployments with health checks and monitoring, as well as implementing and maintaining GitHub Actions CI/CD pipelines for building, testing, and deploying containers to Fly.io.
 - **Jiakai Tang – Product Management \& SendGrid Email**
@@ -267,8 +281,12 @@ These contributions correspond to branches and commits in the shared GitHub repo
 
 ***
 
+## Video Demo
+[https://youtu.be/8oCx1yJxHec](https://youtu.be/8oCx1yJxHec)
+***
+
 ## Lessons Learned and Concluding Remarks
 
-Working with Kubernetes PVCs and Fly.io volumes revealed the importance of designing explicitly for stateful workloads and disaster recovery from the start. Integrating CI/CD with GitHub Actions and GHCR produced reliable, repeatable deployments but required careful secret and configuration management across environments.
+Working with Kubernetes PVCs and Fly.io volumes revealed the importance of designing explicitly for stateful workloads from the start. Integrating CI/CD with GitHub Actions and GHCR produced reliable, repeatable deployments but required careful secret and configuration management across environments.
 
 The SendGrid integration and scheduled Fly functions demonstrated how serverless patterns can complement a containerized core while emphasizing the need for robust observability and alerting for asynchronous jobs. Overall, SweatSync provided a realistic, end-to-end experience in designing, deploying, and operating a modern cloud-native web application focused on actual user problems.
