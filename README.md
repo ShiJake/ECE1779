@@ -248,18 +248,33 @@ Open the returned URL in your browser to interact with the app running on Miniku
 
 ### Database Schema, Storage, and Local Access
 
-The database schema is backed by Kubernetes PersistentVolumes to ensure data survives pod restarts.
+SweatSync uses a lightweight PostgreSQL schema designed to support user accounts and workout logging.
+In production, the database runs on Fly.io using an unmanaged Postgres instance backed by a Fly volume.
+In local development, PostgreSQL runs inside Docker Compose.
 
-- `users`: `id` (UUID PK), `username` (unique, indexed), `email` (unique, indexed), `password_hash`, `created_at`
-- `workouts`: `id` (UUID PK), `user_id` (FK to users.id), `date` (indexed), `notes`, `created_at`, `updated_at`
-- `exercises`: `id` (UUID PK), `workout_id` (FK to workouts.id), `name` (indexed), `sets`, `reps`, `weight`
+#### Schema Overview
+The current schema contains two tables:
+- `users`: `id` (serial primary key), `email` (unique), `password_hash`, `created_at` (timestamp)
+- `entries`: `id` (serial primary key), `user_id` (foreign key → users.id, cascade on delete), `date` (date of the workout), `type` (text description of exercise), `quantity` (numeric value associated with the activity), `created_at` (timestamp)
 
-For a Docker-based local DB, you can inspect tables with:
+Example row from users:
+ id |        email         |                        password_hash                         |          created_at
+----+----------------------+--------------------------------------------------------------+-------------------------------
+  1 | ellen2@test.com      | $2b$10$ZQptpNAPhk//sXMqq8NeXOzVfSkWZ58jkhp2Lvu1sf/MkU2MlbWKe | 2025-12-05 00:29:28.340012+00
+
+
+Example row from entries:
+ id | user_id |    date    |      type       | quantity |          created_at
+----+---------+------------+-----------------+----------+-------------------------------
+  1 |       4 | 2025-12-06 | Run (min)       |       22 | 2025-12-06 19:31:04.290425+00
+
+#### Accessing the Fly.io Production Database
 
 ```bash
-docker exec -it sweatsync-db psql -U user -d sweatsync
-sweatsync=# \dt
-sweatsync=# SELECT * FROM users;
+fly postgres connect -a sweatsync-db-pg
+postgres=# \dt
+postgres=# SELECT * FROM users;
+postgres=# SELECT * FROM entries;
 ```
 
 PVC-backed storage in Kubernetes ensures data durability across redeployments and rolling updates.
