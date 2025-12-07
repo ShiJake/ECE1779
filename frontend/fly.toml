@@ -7,10 +7,16 @@ app = 'sweatsync-frontend'
 primary_region = 'yyz'
 
 [build]
-  dockerfile = "Dockerfile" 
+  builtin = "node"
+  install_dev_dependencies = true
+  build_context = "."
+
+[env]
+  NODE_ENV = "production"
+  VITE_BACKEND_URL = "https://sweatsync-backend.fly.dev"
 
 [http_service]
-  internal_port = 80
+  internal_port = 8080
   force_https = true
   auto_stop_machines = 'stop'
   auto_start_machines = true
@@ -25,7 +31,7 @@ primary_region = 'yyz'
 
 [[services]]
   protocol = "tcp"
-  internal_port = 80
+  internal_port = 8080
 
   [[services.ports]]
     handlers = ["http"]
