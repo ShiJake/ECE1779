@@ -120,7 +120,7 @@ SweatSync offers a set of core and advanced features designed to meet the projec
   Email delivery via SendGrid with extensibility for additional third-party service integrations.
 
 
-### User Guide
+## User Guide
 
 **Sign Up**
 
